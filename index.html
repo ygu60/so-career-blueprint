@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex Trajectory | PJ → Stanford MD → Reserve SOST</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070b12;
+      --surface: #0e1626;
+      --surface-border: #1e293d;
+      --surface-elevated: #162238;
+      --text: #f3f4f6;
+      --text-muted: #94a3b8;
+      --cyan: #38bdf8;
+      --cyan-glow: rgba(56, 189, 248, 0.15);
+      --emerald: #10b981;
+      --emerald-glow: rgba(16, 185, 129, 0.15);
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --maroon: #991b1b;
+      --indigo: #6366f1;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    body { background-color: var(--bg); color: var(--text); line-height: 1.6; padding-bottom: 80px; }
+    code, .mono { font-family: 'JetBrains Mono', monospace; }
+
+    .container { max-width: 1300px; margin: 0 auto; padding: 0 24px; }
+
+    /* Header */
+    header {
+      padding: 32px 0 20px;
+      border-bottom: 1px solid var(--surface-border);
+      position: sticky;
+      top: 0;
+      background: rgba(7, 11, 18, 0.94);
+      backdrop-filter: blur(14px);
+      z-index: 100;
+    }
+    .header-bar { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(153, 27, 27, 0.25);
+      border: 1px solid rgba(244, 63, 94, 0.4);
+      color: #fda4af;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    h1 { font-size: 1.85rem; font-weight: 800; letter-spacing: -0.02em; }
+    h1 span { color: var(--cyan); }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; }
+
+    /* Navigation Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      margin: 24px 0 28px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--surface-border);
+    }
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { color: #fff; background: var(--surface); }
+    .tab-btn.active {
+      color: var(--cyan);
+      background: var(--cyan-glow);
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+
+    /* Grids & Cards */
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px; margin-bottom: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 24px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 12px;
+      padding: 22px;
+      position: relative;
+    }
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-subtitle {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+    .card p { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 14px; }
+
+    /* Lists */
+    .bullet-list { list-style: none; padding: 0; }
+    .bullet-list li {
+      position: relative;
+      padding-left: 20px;
+      font-size: 0.86rem;
+      color: #cbd5e1;
+      margin-bottom: 9px;
+    }
+    .bullet-list li::before {
+      content: '▹';
+      position: absolute;
+      left: 0;
+      color: var(--cyan);
+      font-weight: bold;
+    }
+
+    /* Inputs & Form Controls */
+    .input-group { margin-bottom: 14px; }
+    label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.04em; }
+    input, select, textarea {
+      width: 100%;
+      background: #090e18;
+      border: 1px solid var(--surface-border);
+      border-radius: 7px;
+      padding: 10px 12px;
+      color: #fff;
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--cyan); }
+
+    /* Telemetry Display */
+    .telemetry-box {
+      background: #080f1e;
+      border: 1px solid #1e3a5f;
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 14px;
+    }
+    .metric-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.88rem; }
+    .metric-val { font-weight: 700; color: #fff; font-family: 'JetBrains Mono', monospace; }
+    .val-emerald { color: var(--emerald); }
+    .val-cyan { color: var(--cyan); }
+    .val-amber { color: var(--amber); }
+    .val-rose { color: var(--rose); }
+
+    /* Tables */
+    .table-container { overflow-x: auto; margin-top: 12px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left; }
+    th { background: #131c2e; color: #fff; padding: 10px 14px; border: 1px solid var(--surface-border); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
+    td { padding: 10px 14px; border: 1px solid var(--surface-border); color: #cbd5e1; vertical-align: top; }
+    tr:nth-child(even) { background: rgba(14, 22, 38, 0.5); }
+
+    /* Checklists */
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 12px;
+      background: rgba(14, 22, 38, 0.6);
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .check-item:hover { background: var(--surface-elevated); }
+    .check-item input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      margin-top: 3px;
+      accent-color: var(--cyan);
+      cursor: pointer;
+    }
+    .check-title { font-size: 0.88rem; font-weight: 600; color: #fff; }
+    .check-sub { font-size: 0.78rem; color: var(--text-muted); }
+    .check-item.completed { opacity: 0.5; }
+    .check-item.completed .check-title { text-decoration: line-through; }
+
+    /* Action Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface-elevated);
+      border: 1px solid var(--surface-border);
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn:hover { background: #1e2d4a; border-color: var(--cyan); }
+    .btn-cyan { background: #0284c7; border-color: #38bdf8; }
+    .btn-cyan:hover { background: #0369a1; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="header-bar">
+        <div>
+          <div class="badge">Master Operational Architecture</div>
+          <h1>Pararescue <span>&rarr; Stanford MD &rarr;</span> Reserve SOST</h1>
+          <div class="subtitle">WashU Veteran | Trauma Resuscitation | Elite Family Wealth Protocol</div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn" onclick="exportData()">💾 Export JSON</button>
+          <label class="btn" style="margin-bottom: 0; cursor: pointer;">
+            📂 Import JSON <input type="file" id="importInput" style="display:none;" onchange="importData(event)">
+          </label>
+        </div>
+      </div>
+    </header>
+
+    <!-- NAVIGATION -->
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="setTab('telemetry')">📊 Live Telemetry & Trackers</button>
+      <button class="tab-btn" onclick="setTab('mindset')">🧠 Mindset & CNS Architecture</button>
+      <button class="tab-btn" onclick="setTab('timeline')">🗺️ 15-Year Master Roadmap</button>
+      <button class="tab-btn" onclick="setTab('stanford')">🌲 Stanford Admissions Engine</button>
+      <button class="tab-btn" onclick="setTab('sost')">⚡ SOST Austere Competency</button>
+      <button class="tab-btn" onclick="setTab('finance')">💰 Family Wealth Simulator</button>
+    </div>
+
+    <!-- TAB 1: LIVE TELEMETRY & INPUT TRACKERS -->
+    <div id="telemetry" class="tab-content active">
+      <div class="grid-3">
+        <!-- Physical Telemetry Input -->
+        <div class="card">
+          <div class="card-title">Physical Readiness Tracker</div>
+          <div class="card-subtitle">IFT & Selection Benchmarks</div>
+          
+          <div class="input-group">
+            <label>Pull-ups (Target: 20+)</label>
+            <input type="number" id="inPullups" value="22" oninput="saveAndCalc()">
+          </div>
+          <div class="input-group">
+            <label>Push-ups (Target: 90+)</label>
+            <input type="number" id="inPushups" value="80" oninput="saveAndCalc()">
+          </div>
+          <div class="input-group">
+            <label>Sit-ups (Target: 90+)</label>
+            <input type="number" id="inSitups" value="64" oninput="saveAndCalc()">
+          </div>
+          <div class="input-group">
+            <label>1.5-Mile Run Time (MM:SS)</label>
+            <input type="text" id="inRunTime" value="10:10" oninput="saveAndCalc()">
+          </div>
+
+          <div class="telemetry-box">
+            <div class="metric-row">
+              <span>Sit-up Deficit to 90:</span>
+              <span class="metric-val val-rose" id="outSitupDeficit">-26 reps</span>
+            </div>
+            <div class="metric-row">
+              <span>Push-up Deficit to 90:</span>
+              <span class="metric-val val-amber" id="outPushupDeficit">-10 reps</span>
+            </div>
+            <div class="metric-row">
+              <span>Pull-up Status:</span>
+              <span class="metric-val val-emerald" id="outPullupStatus">Selection Ready</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aquatic Progression Tracker -->
+        <div class="card">
+          <div class="card-title">Water Confidence Telemetry</div>
+          <div class="card-subtitle">Hypoxic Progression</div>
+
+          <div class="input-group">
+            <label>Current Uniform Profile</label>
+            <select id="inUniform" onchange="saveAndCalc()">
+              <option value="slick">Slick / Swimsuit</option>
+              <option value="bt" selected>Booties + Tan Shirt[cite: 6, 17]</option>
+              <option value="top">OCP Top + Booties[cite: 6, 17]</option>
+              <option value="full">Full OCPs (Blouse, Trousers, Boots)[cite: 6, 17]</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Underwaters Interval (Target: 20x @ 1:25 B/T or 2:25 OCP)[cite: 6, 17]</label>
+            <input type="text" id="inUwInterval" value="1:35" oninput="saveAndCalc()">
+          </div>
+          <div class="input-group">
+            <label>Max X-Up Reps Completed (Target: 15-Ups)[cite: 6, 17]</label>
+            <input type="number" id="inXups" value="8" oninput="saveAndCalc()">
+          </div>
+          <div class="input-group">
+            <label>40yd Mask & Snorkel Status[cite: 6, 17]</label>
+            <select id="inMask" onchange="saveAndCalc()">
+              <option value="in_progress">Working (30–35 yd)</option>
+              <option value="cleared">Cleared (2x 40yd completed)[cite: 6, 17]</option>
+            </select>
+          </div>
+
+          <div class="telemetry-box">
+            <div class="metric-row">
+              <span>X-Up Completion:</span>
+              <span class="metric-val val-cyan" id="outXupStatus">8 / 15 Reps</span>
+            </div>
+            <div class="metric-row">
+              <span>Parachute Drag Risk:</span>
+              <span class="metric-val val-amber" id="outDragRisk">Moderate</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Autonomic & CNS Recovery Tracker -->
+        <div class="card">
+          <div class="card-title">Autonomic & CNS Monitor</div>
+          <div class="card-subtitle">Fatigue Defense</div>
+
+          <div class="input-group">
+            <label>Resting Heart Rate (RHR) Trend</label>
+            <select id="inRhrTrend" onchange="saveAndCalc()">
+              <option value="stable">Stable / Baseline</option>
+              <option value="elevated" selected>Elevated (+3 to +6 bpm)[cite: 9]</option>
+              <option value="spike">Spiking (> +7 bpm)</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Sleep Architecture (Hours / Continuity)[cite: 9]</label>
+            <select id="inSleep" onchange="saveAndCalc()">
+              <option value="restful">7-8 hrs Unbroken</option>
+              <option value="fragmented" selected>Waking wired after 3–5 hrs[cite: 9]</option>
+              <option value="severe">Severe Insomnia (< 4 hrs)</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>09:30 AM Fueling Adherence[cite: 4, 16]</label>
+            <select id="inFueling" onchange="saveAndCalc()">
+              <option value="strict" selected>100% (PB+J + Hoist + Clusters)[cite: 4, 16]</option>
+              <option value="missed">Delayed / Skipped Window</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Vagal 4-4-8 Breathing Logged (min/day)[cite: 9]</label>
+            <input type="number" id="inVagal" value="10" oninput="saveAndCalc()">
+          </div>
+
+          <div class="telemetry-box">
+            <div class="metric-row">
+              <span>Autonomic State:</span>
+              <span class="metric-val val-amber" id="outCnsStatus">Sympathetic Strain</span>
+            </div>
+            <div class="metric-row">
+              <span>Recommended Action:</span>
+              <span class="metric-val val-cyan" id="outCnsAction">Spine Hangs + 4-4-8[cite: 9]</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: MINDSET & CNS ARCHITECTURE -->
+    <div id="mindset" class="tab-content">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">1. The Hypoxic Cognitive Shift</div>
+          <div class="card-subtitle">Reframing Carbon Dioxide as Pure Information</div>
+          <p>The single greatest filter in water confidence and extreme resuscitation is the human brain's response to hypercapnia (rising CO2)[cite: 6, 11]. Under stress, the mammalian brain interprets the urge to breathe as imminent suffocation. In reality, oxygen saturation remains safely above 90% long after the diaphragm begins contracting[cite: 6, 11].</p>
+          <ul class="bullet-list">
+            <li><strong>Sensory Data vs. Threat:</strong> Treat diaphragmatic contractions, air hunger, and chest tightness as objective data: <em>"My CO2 is elevated; my brain is signaling normally; I still possess ample functional oxygen"</em>[cite: 6, 11].</li>
+            <li><strong>Eliminate the Panic Spike:</strong> Panic consumes oxygen four times faster than calm work. When uniform drag increases, rushing your stroke burns glycogen and induces acute nausea[cite: 11]. Stay completely horizontal, execute one powerful keyhole pull, and maximize glide duration[cite: 6, 11].</li>
+            <li><strong>Dry Land CO2 Exposure:</strong> Conduct 3 weekly dry CO2 tables on your bed[cite: 6]. Desensitizing your respiratory center to air hunger in a safe environment strips away panic when wet OCPs parachute out in the pool[cite: 6, 11].</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title">2. Autonomic Down-Regulation Engine</div>
+          <div class="card-subtitle">Mechanical Control Over Heart Rate & Cortisol[cite: 9]</div>
+          <p>Training under combined track speed work[cite: 3, 5], aquatic hypoxia[cite: 6, 11], and high-density calisthenics[cite: 4, 7] keeps the central nervous system in a chronic sympathetic (fight-or-flight) state[cite: 9]. This manifests as waking up wired after 3–5 hours[cite: 9], climbing resting heart rates[cite: 9], and dropping HRV[cite: 9].</p>
+          <ul class="bullet-list">
+            <li><strong>The 4-4-8 Vagal Brake:</strong> Spend 10 minutes flat on your back before sleep inhaling 4 seconds through your nose, holding 4 seconds, and exhaling for 8 continuous seconds[cite: 9]. The prolonged exhalation mechanically stimulates the vagus nerve, dropping your nervous system into parasympathetic recovery[cite: 9].</li>
+            <li><strong>Spinal Decompression Shield:</strong> After heavy track days, axial spinal loading tightens the calves and lower back[cite: 7]. Use 3 sets of 45-second passive dead hangs to traction the vertebrae[cite: 7, 9], paired with anterior tibialis raises to release tight calf muscle tissue via reciprocal inhibition[cite: 7].</li>
+            <li><strong>Poolside Wall Reset:</strong> When finishing an intense 10-up rep or underwaters lap, take 15–20 seconds on the wall to execute diaphragmatic breathing before starting the next interval[cite: 11]. Never rush into a vertical tread with an oxygen deficit[cite: 11].</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title">3. The 15-Year Compartmentalization Matrix</div>
+          <div class="card-subtitle">Managing High Speed Alongside True Family Presence</div>
+          <p>The elite performer does not allow operational adrenaline or medical trauma to contaminate the home. Balance is not splitting every day 50/50; it is radical presence in whichever domain you are occupying.</p>
+          <ul class="bullet-list">
+            <li><strong>The Hard Shift Boundary:</strong> As an Emergency Medicine physician, when you sign out your final patient, clinical responsibility ceases. You do not check electronic health records, answer outpatient emails, or carry hospital angst into your living room.</li>
+            <li><strong>The Tactical Air Gap:</strong> Reserve SOST requires intense multi-week operational bursts. Prepare your family by setting clear calendar expectations 60 days out, then return completely to your civilian life without military distractions.</li>
+            <li><strong>Ego Suppression & Coachability:</strong> Arriving at medical school as an enlisted PJ veteran demands humility. You are starting at the bottom of a new clinical hierarchy. Treat every resident, nurse, and attending as an instructor cadre member.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title">4. Nutrition & Hydration Discipline</div>
+          <div class="card-subtitle">Fueling the Nervous System & Preventing Cramps[cite: 4, 16]</div>
+          <p>Electrolyte and glycogen depletion directly destabilize autonomic nervous system tone and trigger late-session pool cramping or acute nausea[cite: 4, 11, 16].</p>
+          <ul class="bullet-list">
+            <li><strong>The 09:30 AM Anchor:</strong> Maintain your post-PT fueling window (English muffin PB+J, clusters, and Hoist)[cite: 4, 16]. This is your primary barrier against sodium loss incurred during morning track work[cite: 4, 16].</li>
+            <li><strong>Poolside Micro-Dosing:</strong> Take one small sip of chilled Hoist between every underwater rep or every 2 reps during X-up ladders[cite: 4, 11]. Never chug 4–8 ounces at once; liquid sloshing in a compressed abdominal cavity under hypoxic stress induces vomiting[cite: 11].</li>
+            <li><strong>Pre-Pool Glycogen Bridge:</strong> If pool training occurs more than 2.5 hours after breakfast, ingest a handful of clusters 30 minutes prior to entering the water to stabilize circulating blood glucose[cite: 4, 16].</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: 15-YEAR MASTER ROADMAP -->
+    <div id="timeline" class="tab-content">
+      <div class="grid-2">
+        <div class="card">
+          <div class="badge" style="background:rgba(244,63,94,0.2); border-color:rgba(244,63,94,0.4); color:#fda4af;">Phase 0: Pre-Ship & Foundation (Late 2026 – Early 2027)</div>
+          <div class="card-title">WashU Completion & Move to Colorado</div>
+          <div class="card-subtitle">DEP Transfer & Physical Peaking[cite: 1, 8]</div>
+          <ul class="bullet-list">
+            <li><strong>Graduation & Relocation:</strong> Finish WashU winter term in St. Louis, transfer DEP file cleanly to Colorado Springs developer[cite: 1, 8].</li>
+            <li><strong>Housing & Altitude:</strong> Secure flexible, furnished housing in Colorado Springs (Furnished Finder/month-to-month)[cite: 8]. Acclimate to 6,000 ft altitude for running mechanics[cite: 8].</li>
+            <li><strong>IFT & Selection Peaking:</strong> Drive sit-ups from 64 to 90+, push-ups to 90+, and run to sub-9:00 pace[cite: 5]. Clear 15-ups in full OCPs[cite: 6, 17].</li>
+            <li><strong>Asset Liquidity:</strong> Maintain $4k–$6k in cash reserves; execute clean vehicle transaction before shipping[cite: 1].</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="badge" style="background:rgba(56,189,248,0.2); border-color:rgba(56,189,248,0.4); color:#7dd3fc;">Phase 1: Enlisted Special Warfare (2027 – 2033)</div>
+          <div class="card-title">Active Duty Pararescue (PJ)</div>
+          <div class="card-subtitle">The Pipeline & Operational CSAR[cite: 1]</div>
+          <ul class="bullet-list">
+            <li><strong>The Pipeline (Years 1–2):</strong> Complete BMT, SWCC, A&S, Pre-Dive, Combat Dive, Airborne, MFF, SERE, MP3 Paramedic, and Apprentice Course to earn the Maroon Beret[cite: 1].</li>
+            <li><strong>Operational Experience (Years 3–5):</strong> Deploy with a Guardian Angel Squadron. Amass 1,000+ hours of direct clinical trauma patient care and prolonged field care (PFC)[cite: 1].</li>
+            <li><strong>Academic Renewal (Years 4–5):</strong> Complete 1–2 upper-division biology/biochemistry courses using USAF Tuition Assistance (TA) to renew science prerequisites.</li>
+            <li><strong>MCAT Execution (Year 6):</strong> Dedicate 6 months to MCAT study (Target: 515+). Partner with Service to School (VetLink). Separate honorably with 100% Post-9/11 GI Bill.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="badge" style="background:rgba(245,158,11,0.2); border-color:rgba(245,158,11,0.4); color:#fcd34d;">Phase 2: Medical School (2033 – 2037)</div>
+          <div class="card-title">Stanford School of Medicine</div>
+          <div class="card-subtitle">Four-Year Direct MD Pipeline</div>
+          <ul class="bullet-list">
+            <li><strong>Tuition-Free MD:</strong> Utilize 100% Post-9/11 GI Bill + Yellow Ribbon to complete Stanford with $0 in student loans.</li>
+            <li><strong>Bay Area Housing Arbitrage:</strong> Collect E-5 dependent BAH (~$5,000/mo tax-free) to cover Palo Alto family living costs.</li>
+            <li><strong>Drop the PhD:</strong> Avoid the 8-year MSTP path. Graduating 4 years earlier generates an estimated $1.5M+ in lifetime attending earnings.</li>
+            <li><strong>Trauma & Systems Research:</strong> Publish clinical research on austere resuscitation, whole blood protocols, or field ultrasound.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="badge" style="background:rgba(16,185,129,0.2); border-color:rgba(16,185,129,0.4); color:#6ee7b7;">Phase 3 & 4: Residency, Fellowship & Apex SOST (2037+)</div>
+          <div class="card-title">Attending Practice & Reserve SOST</div>
+          <div class="card-subtitle">Far-Forward Trauma Mastery & Wealth Accumulation</div>
+          <ul class="bullet-list">
+            <li><strong>High-Acuity EM Residency (2037–2040/41):</strong> Train at a high-volume Level 1 county trauma center (Highland, LAC+USC, Denver Health, Shock Trauma).</li>
+            <li><strong>Resuscitation Fellowship:</strong> Complete 1 year of Emergency Medicine Critical Care (EMCC) or Tactical Medicine.</li>
+            <li><strong>Reserve SOST Accession:</strong> Direct accession into an Air Force Special Operations Surgical Team as a commissioned medical officer (O-3/O-4).</li>
+            <li><strong>Civilian Practice & Family:</strong> Work 12–14 shifts/month ($400,000–$480,000/yr). Spend 16–18 full calendar days at home each month with your family.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: STANFORD ADMISSIONS ENGINE -->
+    <div id="stanford" class="tab-content">
+      <div class="card" style="margin-bottom: 24px;">
+        <div class="card-title">Stanford Medicine Admissions Strategy</div>
+        <p>Stanford values biomedical innovation, systems-level problem solving, and non-traditional resilience. Check items off as they are completed; your progress saves automatically to this device.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-subtitle">Academic & Prerequisite Milestones</div>
+          <div id="checklist-academic"></div>
+        </div>
+        <div class="card">
+          <div class="card-subtitle">Clinical Translation & Veteran Networking</div>
+          <div id="checklist-clinical"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: SOST COMPETENCY MATRIX -->
+    <div id="sost" class="tab-content">
+      <div class="card" style="margin-bottom: 20px;">
+        <div class="card-title">Special Operations Surgical Team (SOST) Master Matrix</div>
+        <p>In SOST, the Emergency Physician leads damage-control resuscitation, advanced airway stabilization, vascular access, and point-of-care ultrasound while the surgeon operates. Here is how your enlisted Pararescue foundation builds toward that role[cite: 1].</p>
+      </div>
+
+      <div class="table-container card">
+        <table>
+          <thead>
+            <tr>
+              <th>Clinical Domain</th>
+              <th>SOST Operational Requirement</th>
+              <th>PJ Foundation Carryover[cite: 1]</th>
+              <th>Residency / Fellowship Preparation Focus</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Damage Control Resuscitation</strong></td>
+              <td>Field delivery of cold-stored whole blood and walking blood banks during severe hemorrhagic shock.</td>
+              <td>TCCC mastery, tactical field transfusion protocols, and combat hypothermia prevention.</td>
+              <td>Massive transfusion protocols (MTP), viscoelastic testing (TEG/ROTEM), and calcium balance.</td>
+            </tr>
+            <tr>
+              <td><strong>Point-of-Care Ultrasound (POCUS)</strong></td>
+              <td>Rapid diagnostic ultrasound under blackout/austere conditions (eFAST, cardiac echo, pneumothorax).</td>
+              <td>Familiarity with ruggedized field diagnostics in tactical environments.</td>
+              <td>Mastery of bedside ultrasound; advanced resuscitative echocardiography.</td>
+            </tr>
+            <tr>
+              <td><strong>Endovascular & Vascular Access</strong></td>
+              <td>REBOA placement, femoral arterial lines, and ultrasound-guided central access under operational duress.</td>
+              <td>Fine motor execution under physical and cognitive exhaustion[cite: 11].</td>
+              <td>Frequent vascular access reps in trauma bays and surgical ICUs.</td>
+            </tr>
+            <tr>
+              <td><strong>Prolonged Field Care (PFC)</strong></td>
+              <td>Sustaining 2–4 critically injured patients for 24–72 hours when medical evacuation is delayed.</td>
+              <td>Operational familiarity with austere casualty collection points (CCPs)[cite: 1].</td>
+              <td>Surgical ICU and mechanical ventilation management in multi-organ failure.</td>
+            </tr>
+            <tr>
+              <td><strong>Crew Resource Management</strong></td>
+              <td>Directing resuscitation while coordinating smoothly with surgeons, CRNAs, and tactical operators.</td>
+              <td>Enlisted small-unit leadership, dive/jump team cross-checks, and tactical radio brevity[cite: 1].</td>
+              <td>Resuscitation team leader in multi-casualty Level 1 civilian trauma activations.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 6: FAMILY WEALTH SIMULATOR -->
+    <div id="finance" class="tab-content">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Family Wealth Engine</div>
+          <div class="card-subtitle">Cash Flow & Compounding Across Phases</div>
+
+          <div class="input-group">
+            <label>Select Career Phase</label>
+            <select id="finStage" onchange="updateFinanceStage()">
+              <option value="pj">Phase 1: Active Duty PJ (E-4 to E-6)</option>
+              <option value="stanford">Phase 2: Stanford Med Student (GI Bill + BAH)</option>
+              <option value="residency">Phase 3: EM Resident Physician (PGY 1–3)</option>
+              <option value="attending" selected>Phase 4: Level 1 Attending + Reserve SOST</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Civilian Base Pay ($/year)</label>
+            <input type="number" id="finBase" value="440000" oninput="calcFinance()">
+          </div>
+          <div class="input-group">
+            <label>Monthly Military Tax-Free Housing (BAH) or Drill Pay ($/month)</label>
+            <input type="number" id="finMil" value="2600" oninput="calcFinance()">
+          </div>
+          <div class="input-group">
+            <label>Annual Moonlighting / Locums Shifts ($/year)</label>
+            <input type="number" id="finExtra" value="35000" oninput="calcFinance()">
+          </div>
+          <div class="input-group">
+            <label>Annual Family Investment Rate ($/year)</label>
+            <input type="number" id="finInvest" value="120000" oninput="calcFinance()">
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Financial Telemetry</div>
+          <div class="telemetry-box">
+            <div class="metric-row">
+              <span>Gross Estimated Household Income:</span>
+              <span class="metric-val val-emerald" id="finGross">$506,200</span>
+            </div>
+            <div class="metric-row">
+              <span>Student Debt Balance:</span>
+              <span class="metric-val val-emerald">$0 (GI Bill + Yellow Ribbon)</span>
+            </div>
+            <div class="metric-row">
+              <span>Monthly Household Gross Cash Flow:</span>
+              <span class="metric-val val-cyan" id="finMonthly">$42,183</span>
+            </div>
+            <div class="metric-row">
+              <span>Projected 10-Yr Invested Wealth (@ 7% return):</span>
+              <span class="metric-val val-emerald" id="finCompound">$1,774,000</span>
+            </div>
+          </div>
+
+          <div style="margin-top: 20px;">
+            <div class="card-subtitle">Key Wealth Principles</div>
+            <ul class="bullet-list">
+              <li><strong>Zero Student Loan Drag:</strong> Avoid paying $2,500–$3,500/month to student loan servicers, allowing you to invest immediately upon finishing residency.</li>
+              <li><strong>Bay Area Housing Arbitrage:</strong> Collecting ~$5,000/month tax-free BAH during medical school prevents debt accumulation in Palo Alto.</li>
+              <li><strong>TRICARE Reserve Select:</strong> Drastically reduces healthcare premiums and out-of-pocket maximums for your family.</li>
+              <li><strong>Selective Locums Arbitrage:</strong> One single extra 8-hour shift per month can fund an entire year of 529 plans for multiple children.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Tab Switching
+    function setTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+
+    // Telemetry Calculations
+    function saveAndCalc() {
+      const pullups = parseInt(document.getElementById('inPullups').value) || 0;
+      const pushups = parseInt(document.getElementById('inPushups').value) || 0;
+      const situps = parseInt(document.getElementById('inSitups').value) || 0;
+      const xups = parseInt(document.getElementById('inXups').value) || 0;
+      const uniform = document.getElementById('inUniform').value;
+      const rhr = document.getElementById('inRhrTrend').value;
+      const sleep = document.getElementById('inSleep').value;
+
+      // IFT Outputs
+      document.getElementById('outSitupDeficit').textContent = (situps >= 90) ? 'Goal Cleared (90+)' : (situps - 90) + ' reps';
+      document.getElementById('outPushupDeficit').textContent = (pushups >= 90) ? 'Goal Cleared (90+)' : (pushups - 90) + ' reps';
+      document.getElementById('outPullupStatus').textContent = (pullups >= 20) ? 'Selection Ready (' + pullups + ')' : 'Build to 20+';
+
+      // Aquatic Outputs
+      document.getElementById('outXupStatus').textContent = xups + ' / 15 Reps';
+      let dragRisk = 'Low';
+      if (uniform === 'top') dragRisk = 'Moderate (Parachute effect)';
+      if (uniform === 'full') dragRisk = 'Severe (Upper pull dependent)';
+      document.getElementById('outDragRisk').textContent = dragRisk;
+
+      // CNS Outputs
+      if (rhr === 'elevated' || sleep === 'fragmented') {
+        document.getElementById('outCnsStatus').textContent = 'Sympathetic Strain';
+        document.getElementById('outCnsStatus').className = 'metric-val val-amber';
+        document.getElementById('outCnsAction').textContent = 'Spine Hangs + 4-4-8';
+      } else if (rhr === 'spike' || sleep === 'severe') {
+        document.getElementById('outCnsStatus').textContent = 'Acute CNS Overload';
+        document.getElementById('outCnsStatus').className = 'metric-val val-rose';
+        document.getElementById('outCnsAction').textContent = 'Immediate CNS Deload';
+      } else {
+        document.getElementById('outCnsStatus').textContent = 'Recovered / Stable';
+        document.getElementById('outCnsStatus').className = 'metric-val val-emerald';
+        document.getElementById('outCnsAction').textContent = 'Maintain Protocol';
+      }
+
+      saveAllState();
+    }
+
+    // Financial Engine
+    function updateFinanceStage() {
+      const stage = document.getElementById('finStage').value;
+      if (stage === 'pj') {
+        document.getElementById('finBase').value = 52000;
+        document.getElementById('finMil').value = 2400;
+        document.getElementById('finExtra').value = 0;
+        document.getElementById('finInvest').value = 24000;
+      } else if (stage === 'stanford') {
+        document.getElementById('finBase').value = 0;
+        document.getElementById('finMil').value = 4900;
+        document.getElementById('finExtra').value = 0;
+        document.getElementById('finInvest').value = 12000;
+      } else if (stage === 'residency') {
+        document.getElementById('finBase').value = 75000;
+        document.getElementById('finMil').value = 0;
+        document.getElementById('finExtra').value = 25000;
+        document.getElementById('finInvest').value = 20000;
+      } else if (stage === 'attending') {
+        document.getElementById('finBase').value = 440000;
+        document.getElementById('finMil').value = 2600;
+        document.getElementById('finExtra').value = 35000;
+        document.getElementById('finInvest').value = 120000;
+      }
+      calcFinance();
+    }
+
+    function calcFinance() {
+      const base = parseFloat(document.getElementById('finBase').value) || 0;
+      const mil = (parseFloat(document.getElementById('finMil').value) || 0) * 12;
+      const extra = parseFloat(document.getElementById('finExtra').value) || 0;
+      const invest = parseFloat(document.getElementById('finInvest').value) || 0;
+
+      const totalGross = base + mil + extra;
+      const monthly = totalGross / 12;
+
+      const r = 0.07;
+      const n = 10;
+      const compound = invest * (((Math.pow(1 + r, n)) - 1) / r);
+
+      document.getElementById('finGross').textContent = '$' + Math.round(totalGross).toLocaleString();
+      document.getElementById('finMonthly').textContent = '$' + Math.round(monthly).toLocaleString();
+      document.getElementById('finCompound').textContent = '$' + Math.round(compound).toLocaleString();
+
+      saveAllState();
+    }
+
+    // Checklists Data
+    const academicList = [
+      { id: 'w_trans', title: 'Archive WashU Pre-Med Transcripts', sub: 'Ensure biology, chemistry, and physics credits are documented.' },
+      { id: 'upper_bio', title: 'Renew Science Prereqs via TA (Years 4–5)', sub: 'Complete Biochemistry or Physiology online via an accredited university.' },
+      { id: 'mcat_prep', title: 'Execute Dedicated 6-Month MCAT Block', sub: 'Aim for a score of 515+ (Stanford median: ~518).' },
+      { id: 'mcat_take', title: 'Complete Official MCAT Exam', sub: 'Lock in score 12 months prior to active duty separation.' }
+    ];
+
+    const clinicalList = [
+      { id: 'mp3_cert', title: 'Complete MP3 Paramedic Training', sub: 'Document 1,000+ hours of direct clinical and emergency department care[cite: 1].' },
+      { id: 'unclass_log', title: 'Maintain De-Identified Austere Patient Log', sub: 'Track casualty resuscitations, whole blood deliveries, and airway interventions.' },
+      { id: 'shadowing', title: 'Shadow Civilian Emergency Physicians (40+ hrs)', sub: 'Complete shadowing shifts at a Level 1 Trauma Center during annual leave.' },
+      { id: 's2s_link', title: 'Engage Service to School (VetLink)', sub: 'Partner with an active Stanford Medicine student veteran mentor 18 months prior to application.' },
+      { id: 'omac_net', title: 'Network with Stanford OMAC', sub: 'Engage the Office for Military-Affiliated Communities during your application year.' }
+    ];
+
+    function renderChecklists() {
+      const render = (items, targetId) => {
+        const el = document.getElementById(targetId);
+        el.innerHTML = '';
+        items.forEach(item => {
+          const done = localStorage.getItem('chk_' + item.id) === 'true';
+          const div = document.createElement('div');
+          div.className = 'check-item' + (done ? ' completed' : '');
+          div.innerHTML = `
+            <input type="checkbox" id="${item.id}" ${done ? 'checked' : ''} onchange="toggleCheck('${item.id}')">
+            <div>
+              <div class="check-title">${item.title}</div>
+              <div class="check-sub">${item.sub}</div>
+            </div>
+          `;
+          el.appendChild(div);
+        });
+      };
+      render(academicList, 'checklist-academic');
+      render(clinicalList, 'checklist-clinical');
+    }
+
+    function toggleCheck(id) {
+      const chk = document.getElementById(id);
+      localStorage.setItem('chk_' + id, chk.checked);
+      chk.closest('.check-item').classList.toggle('completed', chk.checked);
+    }
+
+    // State Persistence
+    function saveAllState() {
+      const inputs = document.querySelectorAll('input:not([type="checkbox"]), select');
+      inputs.forEach(input => {
+        if (input.id) localStorage.setItem('val_' + input.id, input.value);
+      });
+    }
+
+    function loadAllState() {
+      const inputs = document.querySelectorAll('input:not([type="checkbox"]), select');
+      inputs.forEach(input => {
+        if (input.id) {
+          const saved = localStorage.getItem('val_' + input.id);
+          if (saved !== null) input.value = saved;
+        }
+      });
+    }
+
+    // Export / Import
+    function exportData() {
+      const dump = {};
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        dump[key] = localStorage.getItem(key);
+      }
+      const blob = new Blob([JSON.stringify(dump, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'apex_career_telemetry.json';
+      a.click();
+    }
+
+    function importData(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const data = JSON.parse(evt.target.result);
+          Object.keys(data).forEach(k => localStorage.setItem(k, data[k]));
+          loadAllState();
+          renderChecklists();
+          saveAndCalc();
+          calcFinance();
+          alert('Telemetry profile loaded successfully.');
+        } catch(err) {
+          alert('Invalid JSON file.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadAllState();
+      renderChecklists();
+      saveAndCalc();
+      calcFinance();
+    });
+  </script>
+</body>
+</html>
